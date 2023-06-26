@@ -1,0 +1,248 @@
+name: 'deployNugetPackages'
+
+on:
+  push:
+    branches:
+    - main
+    - 'release/**'
+  pull_request:
+    branches:
+    - main
+    - 'release/**'
+
+  workflow_dispatch:
+
+env:
+  VERSION_SUFFIX: ${{ github.ref_name }}
+  PACKOUTDIR: ${{ github.workspace }}\packoutput
+                    
+jobs:
+  deploy:
+    name: 'Deploy packages'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    steps:
+     - name: 'echo VERSION_SUFFIX'
+       shell: bash
+       run: echo ${{ env.VERSION_SUFFIX }}
+
+     - name: 'Set VERSION_SUFFIX: dev'
+       if: ${{ github.ref_name }} == 'main'
+       shell: bash
+       run: echo "VERSION_SUFFIX=dev" >> $GITHUB_ENV
+
+     - name: 'Set VERSION_SUFFIX: string.Empty'
+       if: ${{ startsWith(github.ref_name, 'release/v') }}
+       shell: bash
+       run: echo "VERSION_SUFFIX=" >> $GITHUB_ENV
+
+     - name: 'Set VERSION_SUFFIX: alpha'
+       if: ${{ startsWith(github.ref_name, 'release/alpha') }}
+       shell: bash
+       run: echo "VERSION_SUFFIX=alpha" >> $GITHUB_ENV
+
+     - name: 'Set VERSION_SUFFIX: beta'
+       if: ${{ startsWith(github.ref_name, 'release/beta') }}
+       shell: bash
+       run:  echo "VERSION_SUFFIX=beta" >> $GITHUB_ENV
+
+     - name: 'Checkout'
+       uses: actions/checkout@v3
+     
+     - name: 'Install dotnet'
+       uses: actions/setup-dotnet@v2
+       with:
+         dotnet-version: '7.0.x'
+
+     - name: 'Add GitHub to Nuget source'
+       uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
+       with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.Configuration.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Configuration\Oleander.Extensions.Configuration.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.Configuration.Json.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Configuration.Json\Oleander.Extensions.Configuration.Json.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.DependencyInjection.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.DependencyInjection\Oleander.Extensions.DependencyInjection.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         
+     - name: 'Build and test Oleander.Extensions.Logging.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging\Oleander.Extensions.Logging.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.Logging.Abstractions.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.Abstractions\Oleander.Extensions.Logging.Abstractions.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         
+
+     - name: 'Build and test Oleander.Extensions.Logging.Console.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.Console\Oleander.Extensions.Logging.Console.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+
+     - name: 'Build and test Oleander.Extensions.Logging.File.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.File\Oleander.Extensions.Logging.File.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.Logging.TextFormatters.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.TextFormatters\Oleander.Extensions.Logging.TextFormatters.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.Logging.TextFormatters.Abstractions.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.TextFormatters.Abstractions\Oleander.Extensions.Logging.TextFormatters.Abstractions.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.Extensions.Logging.ZipFile.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+       with:
+         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.ZipFile\Oleander.Extensions.Logging.ZipFile.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         packoutdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+     
+     - name: 'delete Oleander.Extensions.Configuration-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Configuration'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Configuration.Json-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Configuration.Json'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.DependencyInjection-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.DependencyInjection'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging.Abstractions-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging.Abstractions'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging.Console-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging.Console'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging.File-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging.File'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging.TextFormatters-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging.TextFormatters'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging.TextFormatters.Abstractions-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging.TextFormatters.Abstractions'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.Extensions.Logging.ZipFile-dev old packages'
+       if: env.VERSION_SUFFIX == 'dev'
+       uses: actions/delete-package-versions@v4
+       with:
+         package-name: 'Oleander.Extensions.Logging.ZipFile'
+         package-type: 'nuget'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'push nuget packages'
+       if: matrix.os == 'windows-latest' && github.event_name != 'pull_request'
+       uses: Andre-Loetzsch/actions/pushNugetPackages@v1
+       with:
+         outdir: ${{ env.PACKOUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'push nuget packages to nuget gallery'
+       if: matrix.os == 'windows-latest' && github.event_name != 'pull_request' && env.VERSION_SUFFIX != 'dev'
+       uses: Andre-Loetzsch/actions/pushNugetPackagesToNugetOrg@v1
+       with:
+         packagedir: ${{ env.PACKOUTDIR }}
+         nuget_apikey: ${{ secrets.NUGETORG_ACCESS_TOKEN }}

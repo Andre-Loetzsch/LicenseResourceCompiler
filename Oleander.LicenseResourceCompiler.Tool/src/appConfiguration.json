@@ -1,0 +1,34 @@
+{
+  "types": {
+    "fileSink": {
+      "Type": "Oleander.Extensions.Logging.File.FileSink, Oleander.Extensions.Logging.File",
+      "Instance": null
+    }
+  },
+
+  "fileSink": {
+
+    "Name": "fileSink",
+    "OverrideExistingFile": "true",
+    "FileNameTemplate": "{baseDirectory}/Logging/StrResGen.log",
+    "TextFormatterType": "Oleander.Extensions.Logging.TextFormatters.ShortVerticalTextFormatter, Oleander.Extensions.Logging.TextFormatters",
+    "Categories": [
+      "*"
+    ],
+    "LogLevel": "Information"
+  },
+
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Debug",
+      "Olenander": "Debug"
+    },
+    "Olenander": {
+      "LogLevel": {
+        "Default": "Debug",
+        "Program": "Debug"
+      }
+    }
+  }
+}
