@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Oleander.LicResComp.Tool.Options;
 
-internal class CompListFileInfosOption : Option<FileInfo[]>
+internal class CompListOption : Option<FileInfo[]>
 {
-    public CompListFileInfosOption() : base(name: "--complist", description: "Specifies the name of a '*.licenses.txt' file that contains the list of licensed components.")
+    public CompListOption() : base(name: "--complist", description: "Specifies the name of a '*.licenses.txt' file that contains the list of licensed components.")
     {
         this.AddAlias("-c");
         this.AddValidator(result =>
@@ -18,7 +18,7 @@ internal class CompListFileInfosOption : Option<FileInfo[]>
 
                 foreach (var fileInfo in fileInfos)
                 {
-                    if (!string.Equals(Path.GetExtension(fileInfo.FullName).Trim('\"'), ".licenses.txt"))
+                    if (!fileInfo.FullName.Trim('\"').ToLower().EndsWith(".licenses.txt"))
                     {
                         result.ErrorMessage = $"File must have an '*.licenses.txt' extension: {fileInfo.FullName}";
                         return;

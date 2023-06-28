@@ -4,9 +4,9 @@ using System.IO;
 
 namespace Oleander.LicResComp.Tool.Options;
 
-internal class TargetFileInfoOption : Option<FileInfo>
+internal class TargetOption : Option<FileInfo>
 {
-    public TargetFileInfoOption() : base(name: "--target", description: "Specifies the executable for which the .licenses file is being generated.")
+    public TargetOption() : base(name: "--target", description: "Specifies the executable for which the .licenses file is being generated.")
     {
         this.AddAlias("-t");
         this.AddValidator(result =>
@@ -17,7 +17,7 @@ internal class TargetFileInfoOption : Option<FileInfo>
 
                 if (fileInfo == null)
                 {
-                    result.ErrorMessage = $"Parameter --target (-t) is missing!";
+                    result.ErrorMessage = "Parameter --target (-t) is missing!";
                     return;
                 }
 

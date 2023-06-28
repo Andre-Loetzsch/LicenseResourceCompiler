@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Oleander.LicResComp.Tool": {
+      "commandName": "Project",
+      "commandLineArgs": "--complist D:\\dev\\Tentakel\\Tentakel.DataAccess\\dev-André\\Tentakel.Hydra.Database\\Properties\\devart.licenses.txt --target \"D:\\dev\\Tentakel\\Tentakel.DataAccess\\dev-André\\Tentakel.Hydra.Database\\bin\\Debug\\Tentakel.Hydra.Database.dll\""
+    }
+  }
+}

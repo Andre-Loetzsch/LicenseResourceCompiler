@@ -14,16 +14,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="17.6.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Oleander.Extensions.Configuration" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Configuration.Json" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.DependencyInjection" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Logging" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Logging.Abstractions" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Logging.Console" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Logging.File" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Logging.TextFormatters" Version="1.1.23090.1151-dev" />
-    <PackageReference Include="Oleander.Extensions.Logging.TextFormatters.Abstractions" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Configuration" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Configuration.Json" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.DependencyInjection" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Logging" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Logging.Abstractions" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Logging.Console" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Logging.File" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Logging.TextFormatters" Version="1.1.23142.1757" />
+    <PackageReference Include="Oleander.Extensions.Logging.TextFormatters.Abstractions" Version="1.1.23142.1757" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
