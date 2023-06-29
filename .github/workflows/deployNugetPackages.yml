@@ -76,14 +76,14 @@ jobs:
          delete-only-pre-release-versions: "true"
          
      - name: 'push nuget packages'
-       if: matrix.os == 'windows-latest' && github.event_name != 'pull_request'
+       if: github.event_name != 'pull_request'
        uses: Andre-Loetzsch/actions/pushNugetPackages@v1
        with:
          outdir: ${{ env.PACKOUTDIR }}
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 'push nuget packages to nuget gallery'
-       if: matrix.os == 'windows-latest' && github.event_name != 'pull_request' && env.VERSION_SUFFIX != 'dev'
+       if: github.event_name != 'pull_request' && env.VERSION_SUFFIX != 'dev'
        uses: Andre-Loetzsch/actions/pushNugetPackagesToNugetOrg@v1
        with:
          packagedir: ${{ env.PACKOUTDIR }}
