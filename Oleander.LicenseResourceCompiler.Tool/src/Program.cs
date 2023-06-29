@@ -171,9 +171,12 @@ internal class Program
                     logger.CreateMSBuildError("LRC6", $"Licenses file not found! '{licensesFilePath}'", "Oleander.LicResComp.Tool");
                     return -1;
                 }
-               
-                var licensesFilePath1 = Path.Combine(outDir!.FullName, $"{compFile.Name.Replace(".licenses.txt", targetFileExtension)}.licenses");
-                File.Move(licensesFilePath, licensesFilePath1, true);
+
+                var licensesDirInfo = new DirectoryInfo(Path.Combine(outDir.FullName, "Licenses"));
+                if (!licensesDirInfo.Exists) licensesDirInfo.Create();
+
+                var licensesFilePathToMove = Path.Combine(licensesDirInfo.FullName, $"{compFile.Name.Replace(".licenses.txt", targetFileExtension)}.licenses");
+                File.Move(licensesFilePath, licensesFilePathToMove, true);
             }
             catch (Exception ex)
             {
@@ -250,7 +253,9 @@ internal class Program
         var hashtable = new Hashtable();
         IFormatter binaryFormatter = new BinaryFormatter();
 
-        var files = projectDirInfo.GetFiles($"*{targetFileExtension}.licenses", SearchOption.TopDirectoryOnly );
+        var licensesDirInfo = new DirectoryInfo(Path.Combine(projectDirInfo.FullName, "Licenses"));
+        var files = licensesDirInfo.GetFiles($"*{targetFileExtension}.licenses", SearchOption.TopDirectoryOnly);
+
         logger.LogInformation("Merge files from directory: {projectDir}", projectDirInfo.FullName);
 
         if (!files.Any()) return 0;
@@ -262,7 +267,7 @@ internal class Program
         {
             logger.LogInformation("Processing file: {file}", file);
 
-            using var stream = file.OpenRead(); 
+            using var stream = file.OpenRead();
 #pragma warning disable SYSLIB0011
             if (binaryFormatter.Deserialize(stream) is not object[] { Length: 2 } objects)
 #pragma warning restore SYSLIB0011
@@ -325,20 +330,27 @@ internal class Program
     {
         var vsProject = new VSProject(projectFileInfo.FullName);
         var itemGroup = vsProject.FindOrCreateProjectItemGroupElement("None", $"{targetFileExtension}.licenses");
+        var licensesDirInfo = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "Licenses"));
 
-        foreach (var file in projectFileInfo.Directory!.GetFiles($"*{targetFileExtension}.licenses"))
+        foreach (var file in licensesDirInfo.GetFiles($"*{targetFileExtension}.licenses"))
         {
-            vsProject.UpdateOrCreateItemElement(itemGroup, "None", file.FullName);
-            logger.LogInformation("Add licenses files '{file}' to project '{projectFile}'.", file.FullName, projectFileInfo.FullName);
+            var updateOrIncludeItem = Path.Combine(licensesDirInfo.Name, file.Name);
+            vsProject.UpdateOrCreateItemElement(itemGroup, "None", updateOrIncludeItem);
+            logger.LogInformation("Add licenses files '{updateOrIncludeItem}' to project '{projectFile}'.", updateOrIncludeItem, projectFileInfo.FullName);
         }
 
         if (targetFileExtension.StartsWith(".")) targetFileExtension = targetFileExtension[1..];
 
-        var embeddedResourceFileName = Path.Combine(projectFileInfo.Directory.FullName, $"{targetFileExtension}.licenses");
-        if (!File.Exists(embeddedResourceFileName)) return 0;
+        var embeddedResourceFileInfo = new FileInfo(Path.Combine(projectFileInfo.Directory.FullName, $"{targetFileExtension}.licenses"));
+        
+        if (!embeddedResourceFileInfo.Exists)
+        {
+            logger.CreateMSBuildError("LRC10", $"Licenses file not found! '{embeddedResourceFileInfo.FullName}'", "Oleander.LicResComp.Tool");
+            return -3;
+        }
 
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", embeddedResourceFileName);
-        logger.LogInformation("Add licenses files '{file}' as 'EmbeddedResource' to project '{projectFile}'.", embeddedResourceFileName, projectFileInfo.FullName);
+        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", embeddedResourceFileInfo.Name);
+        logger.LogInformation("Add licenses files '{file}' as 'EmbeddedResource' to project '{projectFile}'.", embeddedResourceFileInfo.Name, projectFileInfo.FullName);
 
         vsProject.SaveChanges();
         return 0;
