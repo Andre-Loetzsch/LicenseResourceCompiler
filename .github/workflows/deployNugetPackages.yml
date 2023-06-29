@@ -67,7 +67,7 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 'delete dotnet-oleander-licrescomp-tool-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev1'
+       if: env.VERSION_SUFFIX == 'dev'
        uses: actions/delete-package-versions@v4
        with:
          package-name: 'dotnet-oleander-licrescomp-tool'
