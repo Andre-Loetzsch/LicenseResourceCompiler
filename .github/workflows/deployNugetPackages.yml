@@ -19,10 +19,7 @@ env:
 jobs:
   deploy:
     name: 'Deploy packages'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest ]
+    runs-on: windows-latest
     steps:
      - name: 'echo VERSION_SUFFIX'
        shell: bash
