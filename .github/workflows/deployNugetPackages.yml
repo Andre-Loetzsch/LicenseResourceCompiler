@@ -61,174 +61,19 @@ jobs:
        with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-     - name: 'Build and test Oleander.Extensions.Configuration.sln'
+     - name: 'Build and test Oleander.LicenseResourceCompiler.Tool.sln'
        uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
        with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Configuration\Oleander.Extensions.Configuration.sln'
+         solution: '${{ github.workspace }}\Oleander.LicenseResourceCompiler.Tool\Oleander.LicenseResourceCompiler.Tool.sln'
          version-suffix: ${{ env.VERSION_SUFFIX }}
          packoutdir: ${{ env.PACKOUTDIR }}
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-     - name: 'Build and test Oleander.Extensions.Configuration.Json.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Configuration.Json\Oleander.Extensions.Configuration.Json.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: 'Build and test Oleander.Extensions.DependencyInjection.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.DependencyInjection\Oleander.Extensions.DependencyInjection.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         
-     - name: 'Build and test Oleander.Extensions.Logging.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging\Oleander.Extensions.Logging.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: 'Build and test Oleander.Extensions.Logging.Abstractions.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.Abstractions\Oleander.Extensions.Logging.Abstractions.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         
-
-     - name: 'Build and test Oleander.Extensions.Logging.Console.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.Console\Oleander.Extensions.Logging.Console.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-
-     - name: 'Build and test Oleander.Extensions.Logging.File.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.File\Oleander.Extensions.Logging.File.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: 'Build and test Oleander.Extensions.Logging.TextFormatters.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.TextFormatters\Oleander.Extensions.Logging.TextFormatters.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: 'Build and test Oleander.Extensions.Logging.TextFormatters.Abstractions.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.TextFormatters.Abstractions\Oleander.Extensions.Logging.TextFormatters.Abstractions.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: 'Build and test Oleander.Extensions.Logging.ZipFile.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-       with:
-         solution: '${{ github.workspace }}\Oleander.Extensions.Logging.ZipFile\Oleander.Extensions.Logging.ZipFile.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-     
-     - name: 'delete Oleander.Extensions.Configuration-dev old packages'
+     - name: 'delete dotnet-oleander-licrescomp-tool-dev old packages'
        if: env.VERSION_SUFFIX == 'dev'
        uses: actions/delete-package-versions@v4
        with:
-         package-name: 'Oleander.Extensions.Configuration'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Configuration.Json-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Configuration.Json'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.DependencyInjection-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.DependencyInjection'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging.Abstractions-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging.Abstractions'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging.Console-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging.Console'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging.File-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging.File'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging.TextFormatters-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging.TextFormatters'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging.TextFormatters.Abstractions-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging.TextFormatters.Abstractions'
-         package-type: 'nuget'
-         min-versions-to-keep: 5
-         delete-only-pre-release-versions: "true"
-         
-     - name: 'delete Oleander.Extensions.Logging.ZipFile-dev old packages'
-       if: env.VERSION_SUFFIX == 'dev'
-       uses: actions/delete-package-versions@v4
-       with:
-         package-name: 'Oleander.Extensions.Logging.ZipFile'
+         package-name: 'dotnet-oleander-licrescomp-tool'
          package-type: 'nuget'
          min-versions-to-keep: 5
          delete-only-pre-release-versions: "true"

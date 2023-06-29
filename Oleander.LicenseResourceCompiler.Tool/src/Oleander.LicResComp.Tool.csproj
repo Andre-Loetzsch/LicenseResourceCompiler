@@ -8,9 +8,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>licrescomp</ToolCommandName>
-    <PackageId>dotnet-oleander-licrescomp-tool</PackageId>
+   
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,10 +30,12 @@
     <None Update="appConfiguration.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\" />
+    <None Update="lc.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="lc.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -137,10 +137,12 @@ internal class Program
                 logger.LogInformation("Resolved type '{type}'", type);
             }
 
-            var lcTarget = compFile.Name.Replace(".licenses.txt", targetFileExtension);
+            //var lcTarget = compFile.Name.Replace(".licenses.txt", targetFileExtension);
+            var lcTarget = target.Name;
             var lcCompList = new[] { compFile.FullName };
             var assemblies = loadedAssemblies.Where(x => typeCache.Values.Any(x1 => x1.Assembly.FullName == x.FullName)).Select(x => x.Location);
             var licensesFilePath = Path.Combine(outDir!.FullName, $"{lcTarget}.licenses");
+
 
             try
             {
@@ -169,6 +171,9 @@ internal class Program
                     logger.CreateMSBuildError("LRC6", $"Licenses file not found! '{licensesFilePath}'", "Oleander.LicResComp.Tool");
                     return -1;
                 }
+               
+                var licensesFilePath1 = Path.Combine(outDir!.FullName, $"{compFile.Name.Replace(".licenses.txt", targetFileExtension)}.licenses");
+                File.Move(licensesFilePath, licensesFilePath1, true);
             }
             catch (Exception ex)
             {
@@ -245,7 +250,7 @@ internal class Program
         var hashtable = new Hashtable();
         IFormatter binaryFormatter = new BinaryFormatter();
 
-        var files = projectDirInfo.GetFiles($"*.{targetFileExtension}.licenses");
+        var files = projectDirInfo.GetFiles($"*{targetFileExtension}.licenses", SearchOption.TopDirectoryOnly );
         logger.LogInformation("Merge files from directory: {projectDir}", projectDirInfo.FullName);
 
         if (!files.Any()) return 0;
@@ -291,6 +296,8 @@ internal class Program
             return -2;
         }
 
+        if (targetFileExtension.StartsWith(".")) targetFileExtension = targetFileExtension[1..];
+
         logger.LogInformation("Create {targetFileExtension}.licenses", targetFileExtension);
 
         var licensesFile = Path.Combine(projectDirInfo.FullName, $"{targetFileExtension}.licenses");
@@ -319,11 +326,13 @@ internal class Program
         var vsProject = new VSProject(projectFileInfo.FullName);
         var itemGroup = vsProject.FindOrCreateProjectItemGroupElement("None", $"{targetFileExtension}.licenses");
 
-        foreach (var file in projectFileInfo.Directory!.GetFiles($"*.{targetFileExtension}.licenses"))
+        foreach (var file in projectFileInfo.Directory!.GetFiles($"*{targetFileExtension}.licenses"))
         {
             vsProject.UpdateOrCreateItemElement(itemGroup, "None", file.FullName);
             logger.LogInformation("Add licenses files '{file}' to project '{projectFile}'.", file.FullName, projectFileInfo.FullName);
         }
+
+        if (targetFileExtension.StartsWith(".")) targetFileExtension = targetFileExtension[1..];
 
         var embeddedResourceFileName = Path.Combine(projectFileInfo.Directory.FullName, $"{targetFileExtension}.licenses");
         if (!File.Exists(embeddedResourceFileName)) return 0;
@@ -331,6 +340,7 @@ internal class Program
         vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", embeddedResourceFileName);
         logger.LogInformation("Add licenses files '{file}' as 'EmbeddedResource' to project '{projectFile}'.", embeddedResourceFileName, projectFileInfo.FullName);
 
+        vsProject.SaveChanges();
         return 0;
     }
 }
